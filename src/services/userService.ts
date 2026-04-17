@@ -13,6 +13,6 @@ export const getPostByAccount = async():Promise<GetPostsResponse> =>{
 }
 
 export const updateAccount = async(data:UpdateAccountRequest):Promise<UpdateAccountResponse> =>{
-    const res = await api.put<UpdateAccountResponse>('users',data)
+    const res = await api.put<UpdateAccountResponse>('/users/me',data)
     return res.data;
 }

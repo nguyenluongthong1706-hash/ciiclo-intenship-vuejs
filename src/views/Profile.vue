@@ -1,21 +1,54 @@
 <script setup lang="ts">
 import {ref, onMounted} from 'vue'
-import { getAccount, getPostByAccount } from '@/services/userService'
-import { createPost, updatePost, deletePost, getPosts } from '@/services/postService'
+import { getAccount, updateAccount, getPostByAccount } from '@/services/userService'
+import { createPost, updatePost, deletePost } from '@/services/postService'
 import type { User, Post, ReactionType } from '@/types/Object'
 import type { SubmitPostRequest } from '@/types/Request'
 import { useToast } from 'vue-toastification'
 import PostItem from '@/components/Post.vue'
 import PostModal from '@/components/PostModal.vue'
+import UpdateUserForm from '@/components/UpdateUserForm.vue'
 import {handleReact,handleUnreact} from '../composables/hadleReaction'
+import { useAuthStore} from '@/stores/authStore'
+import { useRouter } from 'vue-router'
 
 const user = ref<User | null>(null)
 const posts = ref<Post[] | []>([])
 const showModal = ref<boolean>(false)
+const showUserModal = ref<boolean>(false)
 const isEdit = ref<boolean>(false)
 const selectedPost = ref<Post | null>(null)
 
 const toast = useToast()
+const authStore = useAuthStore()
+const router = useRouter()
+
+const handleLogout = async ()=>{
+    try {
+        const res = await authStore.logout()
+
+        toast.success(res.message)
+        router.push('/auth/login')
+    } catch (error: any) {
+        toast.error(error.responce?.data?.message)
+    }
+}
+const handleSubmitUserModel = async(data:any)=>{
+    if(!user.value) return
+    try {
+        const res = await updateAccount(data)
+
+        user.value.name = data.name
+
+        authStore.updateAuthStore(user.value)
+
+        toast.success(res.message)
+    } catch (error:any) {
+        toast.error(error.responce?.data?.message)
+    } finally{
+        showUserModal.value = false
+    }
+}
 
 const handleSubmitPostModel = async (data: SubmitPostRequest)=>{
     if(isEdit.value && selectedPost.value){
@@ -38,7 +71,6 @@ const handleDeletePost = async (id: string) => {
         toast.error(error.response?.data?.message)
     }
 }
-
 
 const handleUpdatePost = async (data:SubmitPostRequest) => {
     if (!selectedPost.value) return
@@ -143,9 +175,9 @@ onMounted( async()=>{
                     </div>
                 </div>
                 <div class="action">
-                    <button>Update profile</button>
+                    <button @click="showUserModal = true">Update profile</button>
                     <button @click="openCreate">Create new post</button>
-                    <button>Log out</button>
+                    <button @click="handleLogout">Log out</button>
                 </div>
             </div>
             <div class="box-post">
@@ -174,6 +206,12 @@ onMounted( async()=>{
             :isEdit="isEdit"
             @close="showModal = false"
             @submit="handleSubmitPostModel"
+        />
+        <UpdateUserForm
+            :show="showUserModal"
+            :user="user"
+            @close="showUserModal = false"
+            @submit="handleSubmitUserModel"
         />
     </div>
 </template >

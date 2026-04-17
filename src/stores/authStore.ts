@@ -32,9 +32,10 @@ export const useAuthStore = defineStore('auth',{
         },
         async logout(){
             try {
-                await logout();
+                const res = await logout();
+
+                return res
             } catch (error) {
-                console.log("error: ", error)
                 throw error;
             } finally{
                 this.user = null;
@@ -42,6 +43,10 @@ export const useAuthStore = defineStore('auth',{
                 localStorage.removeItem('user');
                 localStorage.removeItem('token');
             }
+        },
+        updateAuthStore(user:User){
+            this.user = user;
+            localStorage.setItem('user',JSON.stringify(this.user));
         }
     }
 })
