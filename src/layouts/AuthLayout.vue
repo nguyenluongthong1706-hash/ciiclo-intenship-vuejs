@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 
 </script>
 <template>
@@ -6,7 +6,7 @@
         <router-view></router-view>
     </div>
 </template>
-<style>
+<style scoped>
 .auth{
     display:flex;
     height: 100vh;

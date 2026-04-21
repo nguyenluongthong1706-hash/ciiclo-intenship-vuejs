@@ -1,5 +1,4 @@
-<script setup>
-import {ref} from "vue"
+<script setup lang="ts">
 import { useAuthStore } from "@/stores/authStore";
 import {useRouter, useRoute} from 'vue-router'
 import logo from '../assets/logo.svg'
@@ -7,6 +6,7 @@ import logo from '../assets/logo.svg'
 const authStore = useAuthStore()
 const router = useRouter()
 const route = useRoute()
+
 </script>
 <template>
     <header>

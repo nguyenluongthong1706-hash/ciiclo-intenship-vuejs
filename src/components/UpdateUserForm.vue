@@ -3,9 +3,10 @@ import { ref, watch } from 'vue';
 import type { User } from '@/types/Object';
 
 // declare props for component
-const {user, show} = defineProps<{
+const {user, show, errors} = defineProps<{
     user : User | null,
     show : boolean
+    errors : any
 }>()
 
 // declare emit submiting and canceling form for component
@@ -28,10 +29,13 @@ watch(
 )
 </script>
 <template>
-    <div v-if="show" class="modal-overlay">
+    <div v-show="show" class="modal-overlay">
         <div class="modal">
             <h1>Update your profile</h1>
 
+            <p v-if="errors.name" class="error">
+              {{errors.name[0]}}
+          </p>
             <input
                 v-model="form.name"
                 placeholder="Name"
@@ -63,7 +67,10 @@ watch(
   width: 400px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+}
+.input{
+  margin-top:0;
+  margin-bottom: 20px;
 }
 .input{
   padding: 8px;
@@ -88,5 +95,9 @@ watch(
 .submit {
   background: #3498db;
   color: white;
+}
+.error {
+    font-size: 12px;
+    color:red;
 }
 </style>

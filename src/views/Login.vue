@@ -14,6 +14,8 @@ const router = useRouter()
 
 const handleLogin = async ()=>{
     try{
+        errors.value = {}
+        
         const res = await useAuth.login({
             email: email.value,
             password: password.value
@@ -32,6 +34,7 @@ const handleLogin = async ()=>{
     }
 }
 </script>
+
 <template>
     <div>
        <form @submit.prevent="handleLogin" class="form-login">
@@ -39,14 +42,17 @@ const handleLogin = async ()=>{
                 <button @click="router.push('/')" class="btn-nav">home</button>
             </div>
             <h1 :style="{textAlign:'center', paddingBottom: '50px', paddingTop: '0px', marginTop:'5px'}">Access your account in the system</h1>
+            
             <p v-if="errors.email" class="error">
                 {{errors.email[0]}}
             </p>
             <input class="input-login" v-model="email" placeholder="Enter your email">
+
             <p v-if="errors.password" class="error">
                 {{errors.password[0]}}
             </p>
             <input class="input-login" v-model="password" placeholder="Enter your password">
+
             <div :style="{textAlign:'center'}">
                 <button type="submit" class="btn-login">Log in </button>
             </div>
@@ -54,6 +60,7 @@ const handleLogin = async ()=>{
        </form>
     </div>
 </template>
+
 <style scoped>
 .form-login{
     display: flex;

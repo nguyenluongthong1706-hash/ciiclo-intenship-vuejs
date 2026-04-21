@@ -3,7 +3,7 @@ import Login from '@/views/Login.vue'
 import Register from '@/views/Register.vue'
 import AuthLayout from '@/layouts/AuthLayout.vue'
 import DefaultLayout from '@/layouts/DefaultLayout.vue'
-import Homepage from '@/views/Homepage.vue'
+import Homepage from '@/views/HomePage.vue'
 import Profile from '@/views/Profile.vue'
 
 const routes = [

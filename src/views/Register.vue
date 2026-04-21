@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {ref, onMounted} from 'vue'
+import {ref} from 'vue'
 import { register } from '@/services/authService'
 import { useToast } from 'vue-toastification'
 import { useRouter } from 'vue-router'
@@ -15,6 +15,8 @@ const router = useRouter()
 
 const handleRegister = async ()=>{
     try{
+        errors.value = {}
+        
         const res = await register({
             name: name.value,
             email: email.value,
@@ -34,8 +36,8 @@ const handleRegister = async ()=>{
         toast.error(msg)
     }
 }
-
 </script>
+
 <template>
     <div>
        <form @submit.prevent="handleRegister" class="form-login">
@@ -66,6 +68,7 @@ const handleRegister = async ()=>{
        </form>
     </div>
 </template>
+
 <style scoped>
 .form-login{
     display: flex;

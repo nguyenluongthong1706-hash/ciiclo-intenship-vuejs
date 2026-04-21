@@ -18,6 +18,7 @@ const showModal = ref<boolean>(false)
 const showUserModal = ref<boolean>(false)
 const isEdit = ref<boolean>(false)
 const selectedPost = ref<Post | null>(null)
+const errors = ref<any>({})
 
 const toast = useToast()
 const authStore = useAuthStore()
@@ -30,12 +31,13 @@ const handleLogout = async ()=>{
         toast.success(res.message)
         router.push('/auth/login')
     } catch (error: any) {
-        toast.error(error.responce?.data?.message)
+        toast.error(error.response?.data?.message)
     }
 }
 const handleSubmitUserModel = async(data:any)=>{
     if(!user.value) return
     try {
+        errors.value = {}
         const res = await updateAccount(data)
 
         user.value.name = data.name
@@ -43,10 +45,13 @@ const handleSubmitUserModel = async(data:any)=>{
         authStore.updateAuthStore(user.value)
 
         toast.success(res.message)
-    } catch (error:any) {
-        toast.error(error.responce?.data?.message)
-    } finally{
+        
         showUserModal.value = false
+    } catch (error:any) {
+        toast.error(error.response?.data?.message)
+        if (error.response?.data?.errors) {
+            errors.value = error.response.data.errors
+        }
     }
 }
 
@@ -56,8 +61,6 @@ const handleSubmitPostModel = async (data: SubmitPostRequest)=>{
     }else{
         await handleCreatePost(data)
     }
-    showModal.value = false
-    selectedPost.value = null
 }
 
 const handleDeletePost = async (id: string) => {
@@ -79,6 +82,7 @@ const handleUpdatePost = async (data:SubmitPostRequest) => {
     selectedPost.value.category.id = data.category_id
 
     try {
+        errors.value = {}
         const res = await updatePost(
             selectedPost.value.id, 
             {
@@ -96,21 +100,30 @@ const handleUpdatePost = async (data:SubmitPostRequest) => {
 
         toast.success(res.message)
         selectedPost.value = null
+        showModal.value = false
     } catch (error:any) {
         toast.error(error.response?.data?.message)
+        if (error.response?.data?.errors) {
+            errors.value = error.response.data.errors
+        }
     }
 }
 
 const handleCreatePost = async (data:SubmitPostRequest) => {
     try {
+        errors.value = {}
         const res = await createPost(data)
 
         const postRes = await getPostByAccount()
-        posts.value = postRes.posts ?? []
+        posts.value = postRes.data ?? []
 
         toast.success(res.message)
+        showModal.value = false
     } catch (error:any) {
         toast.error(error.response?.data?.message)
+        if (error.response?.data?.errors) {
+            errors.value = error.response.data.errors
+        }
     }
 }
 
@@ -131,7 +144,7 @@ const handleReactWrapper = async ( {id, type}:{id:string, type:ReactionType} )=>
 
     const resPost = await getPostByAccount()
 
-    posts.value = resPost.posts ?? []
+    posts.value = resPost.data ?? []
 }
 
 const handleUnreactWrapper = async ( id:string )=>{
@@ -139,13 +152,13 @@ const handleUnreactWrapper = async ( id:string )=>{
 
     const resPost = await getPostByAccount()
 
-    posts.value = resPost.posts ?? []
+    posts.value = resPost.data ?? []
 }
 
 onMounted( async()=>{
     try {
         const res = await getAccount()
-        user.value = res.user ?? null
+        user.value = res.data ?? null
         toast.success(res.message)
     } catch (error:any) {
         toast.error(error.response?.data?.message)
@@ -153,7 +166,7 @@ onMounted( async()=>{
     if(user.value){
         try {
             const res = await getPostByAccount()
-            posts.value = res.posts ?? []
+            posts.value = res.data ?? []
             toast.success(res.message)
         } catch (error:any) {
             toast.error(error.response?.data?.message)
@@ -161,6 +174,7 @@ onMounted( async()=>{
     }
 })
 </script>
+
 <template>
     <div class="container">
         <div class="main">
@@ -204,17 +218,26 @@ onMounted( async()=>{
             :show="showModal"
             :post="selectedPost"
             :isEdit="isEdit"
-            @close="showModal = false"
+            :errors = "errors"
+            @close="()=>{
+                showModal = false
+                errors = {}
+            }"
             @submit="handleSubmitPostModel"
         />
         <UpdateUserForm
             :show="showUserModal"
             :user="user"
-            @close="showUserModal = false"
+            :errors = "errors"
+            @close="()=>{
+                showUserModal = false
+                errors = {}
+            }"
             @submit="handleSubmitUserModel"
         />
     </div>
 </template >
+
 <style scoped>
 .container{
     display:fex;

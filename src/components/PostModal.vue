@@ -9,6 +9,7 @@ const props = defineProps<{
   show: boolean
   post?: Post | null
   isEdit?: boolean
+  errors : any
 }>()
 
 const emit = defineEmits<{
@@ -21,6 +22,7 @@ const form = ref<SubmitPostRequest>({
   content: '',
   category_id: ''
 })
+
 const categories = ref<Category[]|[]>([])
 
 const toast = useToast()
@@ -56,31 +58,40 @@ onMounted (async ()=>{
   try {
     const res = await getCategories()
 
-    categories.value = res.categories ?? []
+    categories.value = res.data ?? []
 
     toast.success(res.message)
   } catch (error:any) {
-    toast.error(error.responce?.data?.message)
+    toast.error(error.response?.data?.message)
   }
 })
 </script>
 
 <template>
-  <div v-if="show" class="modal-overlay">
+  <div v-show="show" class="modal-overlay">
     <div class="modal">
       <h2>{{ isEdit ? 'Edit Post' : 'Create Post' }}</h2>
 
+      <p v-if="errors.title" class="error">
+          {{errors?.title[0]}}
+      </p>
       <input
         v-model="form.title"
         placeholder="Title"
         class="input"
       />
 
+      <p v-if="errors.category_id" class="error">
+          {{errors.category_id[0]}}
+      </p>
       <select v-model="form.category_id">
         <option v-if="categories.length === 0" value="null">Category isn't exists</option>
         <option v-else v-for="category in categories" :value="category.id">{{ category.name }}</option>
       </select>
 
+      <p v-if="errors.content" class="error">
+          {{errors.content[0]}}
+      </p>
       <textarea
         v-model="form.content"
         placeholder="Content"
@@ -117,9 +128,11 @@ onMounted (async ()=>{
   width: 400px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
 }
-
+.input, .textarea, select{
+  margin-top:0;
+  margin-bottom: 20px;
+}
 .input, .textarea {
   padding: 8px;
   border-radius: 8px;
@@ -149,5 +162,9 @@ onMounted (async ()=>{
 .submit {
   background: #3498db;
   color: white;
+}
+.error {
+    font-size: 12px;
+    color:red;
 }
 </style>

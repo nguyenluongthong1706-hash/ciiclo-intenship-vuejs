@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import {ref, onMounted} from 'vue'
-import { getPosts, makeReaction, removeReaction} from '@/services/postService'
+import { getPosts} from '@/services/postService'
 import type { Post } from '@/types/Object'
-import type { MakeReactionRequest } from '@/types/Request'
 import type { ReactionType } from '@/types/Object'
 import { useToast } from 'vue-toastification'
 import PostItem from '@/components/Post.vue'
@@ -17,7 +16,7 @@ const handleReactWrapper = async ( {id, type}:{id:string, type:ReactionType} )=>
 
     const resPost = await getPosts()
 
-    posts.value = resPost.posts ?? []
+    posts.value = resPost.data ?? []
 }
 
 const handleUnreactWrapper = async ( id:string )=>{
@@ -25,20 +24,21 @@ const handleUnreactWrapper = async ( id:string )=>{
 
     const resPost = await getPosts()
 
-    posts.value = resPost.posts ?? []
+    posts.value = resPost.data ?? []
 }
 
 onMounted( async()=>{
     try {
         const res = await getPosts()
 
-        posts.value = res.posts ?? []
+        posts.value = res.data ?? []
         toast.success(res.message)
     } catch (error:any) {
         toast.error(error.response?.data?.message)
     }
 })
 </script>
+
 <template>
     <div class="container">
         <div class="main">
@@ -60,6 +60,7 @@ onMounted( async()=>{
         </div>
     </div>
 </template>
+
 <style scoped>
 .container{
     display:fex;

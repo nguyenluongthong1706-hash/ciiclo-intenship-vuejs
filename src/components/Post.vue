@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 import type { Post, ReactionType } from '@/types/Object'
 
 const {post, isAction = false, isReaction = false} = defineProps<{

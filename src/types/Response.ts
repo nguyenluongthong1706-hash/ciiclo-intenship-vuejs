@@ -6,13 +6,13 @@ export interface RegisterResponse{
 
 export interface LoginResponse {
     message: string,
-    user ?: User,
+    data ?: User,
     token ?: string
 }
 
 export interface GetAccountResponse {
     message: string,
-    user ?: User
+    data ?: User
 }
 
 export interface UpdateAccountResponse {
@@ -21,7 +21,7 @@ export interface UpdateAccountResponse {
 
 export interface GetPostsResponse {
     message: string,
-    posts ?: Post[]
+    data ?: Post[]
 }
 
 export interface CreatePostResponse {
@@ -38,7 +38,7 @@ export interface DeletePostResponse {
 
 export interface GetCategoriesResponse {
     message: string,
-    categories ?: Category[]
+    data ?: Category[]
 }
 
 export interface MakeReactionResponse {
