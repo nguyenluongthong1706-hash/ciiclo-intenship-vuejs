@@ -5,7 +5,7 @@ import type { Post } from '@/types/Object'
 import type { ReactionType } from '@/types/Object'
 import { useToast } from 'vue-toastification'
 import PostItem from '@/components/Post.vue'
-import {handleReact,handleUnreact} from '../composables/hadleReaction'
+import {handleReact,handleDeactivate} from '../composables/handleReaction'
 
 const posts = ref<Post[] | []>([])
 
@@ -19,8 +19,8 @@ const handleReactWrapper = async ( {id, type}:{id:string, type:ReactionType} )=>
     posts.value = resPost.data ?? []
 }
 
-const handleUnreactWrapper = async ( id:string )=>{
-    await handleUnreact(id)
+const handleDeactivateWrapper = async ( id:string )=>{
+    await handleDeactivate(id)
 
     const resPost = await getPosts()
 
@@ -32,7 +32,6 @@ onMounted( async()=>{
         const res = await getPosts()
 
         posts.value = res.data ?? []
-        toast.success(res.message)
     } catch (error:any) {
         toast.error(error.response?.data?.message)
     }
@@ -54,7 +53,7 @@ onMounted( async()=>{
                     :key="post.id" 
                     :is-reaction="true"
                     @react="handleReactWrapper"
-                    @unreact="handleUnreactWrapper"
+                    @deactivate="handleDeactivateWrapper"
                 ></PostItem>
             </div>
         </div>

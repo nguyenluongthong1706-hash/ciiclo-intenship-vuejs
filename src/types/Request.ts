@@ -17,6 +17,12 @@ export interface UpdateAccountRequest {
     avatar ?: string
 }
 
+export interface UpdateUserRequest {
+    name ?: string,
+    avatar ?: string,
+    is_active ?: boolean
+}
+
 export interface SubmitPostRequest {
     title : string,
     content : string,
@@ -31,4 +37,16 @@ export interface UpdatePostRequest {
 
 export interface MakeReactionRequest {
     type : ReactionType
+}
+
+export interface UpdateStatusRequest {
+    is_active : boolean
+}
+
+export interface CreateCategoryRequest {
+    name : string
+}
+
+export interface UpdateCategoryRequest {
+    name : string
 }

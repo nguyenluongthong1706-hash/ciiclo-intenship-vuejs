@@ -5,6 +5,11 @@ import AuthLayout from '@/layouts/AuthLayout.vue'
 import DefaultLayout from '@/layouts/DefaultLayout.vue'
 import Homepage from '@/views/HomePage.vue'
 import Profile from '@/views/Profile.vue'
+import  AdminLayout from '@/layouts/AdminLayout.vue'
+import DashBoard from '@/views/DashBoard.vue'
+import UserManagement from '@/views/UserManagement.vue'
+import PostManagement from '@/views/PostManagement.vue'
+import CategoryManagement from '@/views/CategoryManagement.vue'
 
 const routes = [
     {
@@ -33,6 +38,28 @@ const routes = [
                 'path' : 'register',
                 'component' : Register
             }
+        ]
+    },
+    {
+        'path': '/admin',
+        'component' : AdminLayout,
+        'children' : [
+            {
+                'path' : 'dashboard',
+                'component' : DashBoard
+            },
+            {
+                'path' : 'user',
+                'component' : UserManagement
+            },
+            {
+                'path' : 'post',
+                'component' : PostManagement
+            },
+            {
+                'path' : 'category',
+                'component' : CategoryManagement
+            },
         ]
     }
 ]

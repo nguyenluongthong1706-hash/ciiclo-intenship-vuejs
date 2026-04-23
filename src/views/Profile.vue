@@ -8,7 +8,7 @@ import { useToast } from 'vue-toastification'
 import PostItem from '@/components/Post.vue'
 import PostModal from '@/components/PostModal.vue'
 import UpdateUserForm from '@/components/UpdateUserForm.vue'
-import {handleReact,handleUnreact} from '../composables/hadleReaction'
+import {handleReact,handleDeactivate} from '../composables/handleReaction'
 import { useAuthStore} from '@/stores/authStore'
 import { useRouter } from 'vue-router'
 
@@ -147,8 +147,8 @@ const handleReactWrapper = async ( {id, type}:{id:string, type:ReactionType} )=>
     posts.value = resPost.data ?? []
 }
 
-const handleUnreactWrapper = async ( id:string )=>{
-    await handleUnreact(id)
+const handleDeactivateWrapper = async ( id:string )=>{
+    await handleDeactivate(id)
 
     const resPost = await getPostByAccount()
 
@@ -159,7 +159,6 @@ onMounted( async()=>{
     try {
         const res = await getAccount()
         user.value = res.data ?? null
-        toast.success(res.message)
     } catch (error:any) {
         toast.error(error.response?.data?.message)
     }
@@ -167,7 +166,6 @@ onMounted( async()=>{
         try {
             const res = await getPostByAccount()
             posts.value = res.data ?? []
-            toast.success(res.message)
         } catch (error:any) {
             toast.error(error.response?.data?.message)
         }
@@ -209,7 +207,7 @@ onMounted( async()=>{
                     @edit="openEdit"
                     :is-reaction="true"
                     @react="handleReactWrapper"
-                    @unreact="handleUnreactWrapper"
+                    @deactivate="handleDeactivateWrapper"
                     
                 ></PostItem>
             </div>

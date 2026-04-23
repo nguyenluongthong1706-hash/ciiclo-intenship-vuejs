@@ -2,23 +2,24 @@
 import { ref } from 'vue'
 import type { Post, ReactionType } from '@/types/Object'
 
-const {post, isAction = false, isReaction = false} = defineProps<{
-  post : Post,
+const {post, isAction = false, isReaction = false, isAdmin = false} = defineProps<{
+  post : Post
   isAction ?: boolean
   isReaction ?: boolean
+  isAdmin ?: boolean
 }>()
 
 const emit = defineEmits<{
   (e: 'delete', id: string): void
   (e: 'edit', post: Post): void
   (e: 'react', payload: { id: string, type: ReactionType }): void
-  (e: 'unreact', id: string): void
+  (e: 'deactivate', id: string): void
 }>()
 
 const expanded = ref<boolean>(false)
 
 
-const tongLeReadmore = ()=>{
+const toggleReadMore = ()=>{
     expanded.value = !expanded.value
 }
 
@@ -27,7 +28,7 @@ const handleReact = (type: ReactionType) => {
 }
 
 const handleRemoveReaction = () => {
-  emit('unreact', post.id)
+  emit('deactivate', post.id)
 }
 </script>
 
@@ -36,7 +37,7 @@ const handleRemoveReaction = () => {
         
         <h2 class="card-title">{{ post.title }}</h2>
 
-        <p class="card-content" :class="{expanded : expanded}">
+        <p class="card-content" :class="{expanded : expanded || isAdmin}">
           {{ post.content }}
         </p>
 
@@ -49,7 +50,7 @@ const handleRemoveReaction = () => {
           <span>The lastes update: {{ post.updated_at }}</span>
         </div>
 
-        <button @click="tongLeReadmore" class="btn">{{ expanded ? 'Show less' : 'Read more' }}</button>
+        <button @click="toggleReadMore" class="btn" v-show="!isAdmin">{{ expanded ? 'Show less' : 'Read more' }}</button>
 
         <div v-if="isAction" class="action">
             <button @click="emit('edit', post)">🖊</button>

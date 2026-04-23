@@ -1,6 +1,6 @@
 import api from './api.ts'
 import type { CreatePostResponse, UpdatePostResponse, DeletePostResponse, GetPostsResponse, MakeReactionResponse, RemoveReactionResponse } from '@/types/Response.ts'
-import type {SubmitPostRequest, UpdatePostRequest, MakeReactionRequest} from '@/types/Request.ts'
+import type {SubmitPostRequest, UpdatePostRequest, MakeReactionRequest, UpdateStatusRequest} from '@/types/Request.ts'
 
 export const getPosts = async():Promise<GetPostsResponse> =>{
     const res = await api.get<GetPostsResponse>('/posts')
@@ -16,6 +16,12 @@ export const createPost = async(data:SubmitPostRequest):Promise<CreatePostRespon
 
 export const updatePost = async(id:string, data: UpdatePostRequest):Promise<UpdatePostResponse> =>{
     const res = await api.put<UpdatePostResponse>(`/posts/${id}`,data)
+
+    return res.data;
+}
+
+export const updatePostStatus = async(id:string, data: UpdateStatusRequest):Promise<UpdatePostResponse> =>{
+    const res = await api.put<UpdatePostResponse>(`/posts/${id}/status`,data)
 
     return res.data;
 }

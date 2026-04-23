@@ -71,8 +71,6 @@ watch(
 .input{
   margin-top:0;
   margin-bottom: 20px;
-}
-.input{
   padding: 8px;
   border-radius: 8px;
   border: 1px solid #ccc;

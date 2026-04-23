@@ -59,8 +59,6 @@ onMounted (async ()=>{
     const res = await getCategories()
 
     categories.value = res.data ?? []
-
-    toast.success(res.message)
   } catch (error:any) {
     toast.error(error.response?.data?.message)
   }

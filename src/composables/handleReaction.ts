@@ -14,7 +14,7 @@ const handleReact = async ( {id, type}:{id:string, type:ReactionType} ) => {
     }
 }
 
-const handleUnreact = async (id:string) => {
+const handleDeactivate = async (id:string) => {
     try {
         const res = await removeReaction(id)
 
@@ -25,4 +25,4 @@ const handleUnreact = async (id:string) => {
     }
 }
 
-export {handleReact,handleUnreact}
+export {handleReact,handleDeactivate}

@@ -10,12 +10,17 @@ export interface LoginResponse {
     token ?: string
 }
 
-export interface GetAccountResponse {
+export interface GetUserResponse {
     message: string,
     data ?: User
 }
 
-export interface UpdateAccountResponse {
+export interface GetUsersResponse {
+    message: string,
+    data ?: User[]
+}
+
+export interface UpdateUserResponse {
     message: string
 }
 
@@ -39,6 +44,18 @@ export interface DeletePostResponse {
 export interface GetCategoriesResponse {
     message: string,
     data ?: Category[]
+}
+
+export interface CreateCategoryResponse {
+    message: string
+}
+
+export interface UpdateCategoryResponse {
+    message: string
+}
+
+export interface DeleteCategoryResponse {
+    message: string
 }
 
 export interface MakeReactionResponse {

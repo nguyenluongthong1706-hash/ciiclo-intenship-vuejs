@@ -1,19 +1,21 @@
 export interface User{
-    id: string,
-    name : string,
-    email : string,
-    role : 'USER' | 'ADMIN',
-    avatar : string,
-    created_at: string
-    updated_at: string
+  id: string,
+  name : string,
+  email : string,
+  role : 'USER' | 'ADMIN',
+  avatar : string,
+  is_active : boolean,
+  created_at: string
+  updated_at: string
 }
 
 export interface Post {
   id: string
   title: string
   content: string
-  category: Category
+  category: {id:string, name:string}
   author: { id:string,  name: string }
+  is_active : boolean,
   created_at: string,
   updated_at: string,
   reaction_count: any
@@ -22,7 +24,10 @@ export interface Post {
 
 export interface Category {
   id: string,
-  name: string
+  name: string,
+  is_active : boolean,
+  created_at: string,
+  updated_at: string,
 }
 
 export type  ReactionType =  'like'|'dislike'|'love'|'angry'
