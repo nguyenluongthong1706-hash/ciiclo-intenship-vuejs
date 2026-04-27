@@ -10,6 +10,8 @@ import DashBoard from '@/views/DashBoard.vue'
 import UserManagement from '@/views/UserManagement.vue'
 import PostManagement from '@/views/PostManagement.vue'
 import CategoryManagement from '@/views/CategoryManagement.vue'
+import NotFound from '@/views/NotFound.vue'
+import { useAuthStore } from '@/stores/authStore'
 
 const routes = [
     {
@@ -18,11 +20,13 @@ const routes = [
         'children' : [
             {
                 'path': '',
-                'component': Homepage
+                'component': Homepage,
+                'meta': {requiresAuth: false}
             },
             {
-                'path': '/profile',
-                'component': Profile
+                'path': 'profile',
+                'component': Profile,
+                'meta' : {requiresAuth: true}
             }
         ]
     },
@@ -43,6 +47,7 @@ const routes = [
     {
         'path': '/admin',
         'component' : AdminLayout,
+        'meta' : {requiresAuth: true, role: "ADMIN"},
         'children' : [
             {
                 'path' : 'dashboard',
@@ -61,12 +66,30 @@ const routes = [
                 'component' : CategoryManagement
             },
         ]
+    },{
+        'path' : '/:path(.*)*',
+        'component' : NotFound
     }
 ]
 
 const router = createRouter({
-  history: createWebHistory(),
-  routes
+    history: createWebHistory(),
+    routes
+})
+
+router.beforeEach((to, from, next)=>{
+    const authStore = useAuthStore()
+    const user = authStore.user
+
+    if(to.meta.requiresAuth && !user){
+        return next('/auth/login')
+    }
+
+    if(to.meta.role && user?.role !== to.meta.role){
+        return next('/')
+    }
+
+    next()
 })
 
 export default router

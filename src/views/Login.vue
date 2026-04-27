@@ -21,7 +21,12 @@ const handleLogin = async ()=>{
             password: password.value
         })
 
-        router.push('/')
+        if(res.data && res.data.role == 'ADMIN'){
+            router.push('/admin/dashboard')
+        }else{
+            router.push('/')
+        }
+        
         toast.success(res.message)
     }catch (error:any) {
         console.log(error)

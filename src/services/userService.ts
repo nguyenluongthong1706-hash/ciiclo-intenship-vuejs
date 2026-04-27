@@ -31,3 +31,16 @@ export const updateAccount = async(data:UpdateAccountRequest):Promise<UpdateUser
     const res = await api.put<UpdateUserResponse>('/users/me',data)
     return res.data;
 }
+
+export const uploadAvatar = async (file: File) => {
+    const formData = new FormData()
+    formData.append('avatar', file)
+
+    const res = await api.put('/users/avatar', formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        }
+    })
+
+    return res.data
+}

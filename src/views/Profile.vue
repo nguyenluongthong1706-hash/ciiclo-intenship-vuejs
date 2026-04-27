@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {ref, onMounted} from 'vue'
-import { getAccount, updateAccount, getPostByAccount } from '@/services/userService'
+import { getAccount, updateAccount, getPostByAccount, uploadAvatar } from '@/services/userService'
 import { createPost, updatePost, deletePost } from '@/services/postService'
 import type { User, Post, ReactionType } from '@/types/Object'
 import type { SubmitPostRequest } from '@/types/Request'
@@ -19,10 +19,32 @@ const showUserModal = ref<boolean>(false)
 const isEdit = ref<boolean>(false)
 const selectedPost = ref<Post | null>(null)
 const errors = ref<any>({})
+const avatarInput = ref<HTMLInputElement | null>(null)
 
 const toast = useToast()
 const authStore = useAuthStore()
 const router = useRouter()
+
+const handleChooseAvatar = () => {
+    avatarInput.value?.click()
+}
+
+const handleUploadAvatar = async (e: Event) => {
+    const file = (e.target as HTMLInputElement).files?.[0]
+    if (!file) return
+
+    try {
+        const res = await uploadAvatar(file)
+
+        if (user.value) {
+            user.value.avatar = res.data.url
+        }
+
+        toast.success(res.message)
+    } catch (error: any) {
+        toast.error(error.response?.data?.message)
+    }
+}
 
 const handleLogout = async ()=>{
     try {
@@ -34,7 +56,7 @@ const handleLogout = async ()=>{
         toast.error(error.response?.data?.message)
     }
 }
-const handleSubmitUserModel = async(data:any)=>{
+const handleSubmitUserModel = async(data:{name:string})=>{
     if(!user.value) return
     try {
         errors.value = {}
@@ -119,6 +141,7 @@ const handleCreatePost = async (data:SubmitPostRequest) => {
 
         toast.success(res.message)
         showModal.value = false
+        selectedPost.value = null
     } catch (error:any) {
         toast.error(error.response?.data?.message)
         if (error.response?.data?.errors) {
@@ -179,7 +202,17 @@ onMounted( async()=>{
             <div class="box-info">
                 <div class="box-info-left">
                     <div class="avatar">
-                        <img :src="user?.avatar">
+                        <img :src="user?.avatar" />
+                        <button class="avatar-upload-btn" @click="handleChooseAvatar">
+                            ✏️
+                        </button>
+                        <input 
+                            type="file"
+                            ref="avatarInput"
+                            style="display: none"
+                            accept="image/*"
+                            @change="handleUploadAvatar"
+                        />
                     </div>
                     <div class="info">
                         <p>Name: {{ user?.name }}</p>
@@ -266,6 +299,19 @@ onMounted( async()=>{
 .avatar{
     width: 160px;
     height: 160px;
+    position: relative;
+    border-radius: 50%;
+    object-fit: cover;
+}
+.avatar-upload-btn{
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    background: white;
+    border: none;
+    border-radius: 50%;
+    padding: 6px;
+    cursor: pointer;
 }
 .avatar img{
     height: 100%;
