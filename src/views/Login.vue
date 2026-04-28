@@ -56,7 +56,7 @@ const handleLogin = async ()=>{
             <p v-if="errors.password" class="error">
                 {{errors.password[0]}}
             </p>
-            <input class="input-login" v-model="password" placeholder="Enter your password">
+            <input type="password" class="input-login" v-model="password" placeholder="Enter your password">
 
             <div :style="{textAlign:'center'}">
                 <button type="submit" class="btn-login">Log in </button>

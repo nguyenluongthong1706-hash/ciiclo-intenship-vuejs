@@ -14,6 +14,8 @@ export const useAuthStore = defineStore('auth',{
             try {
                 const res = await login(data);
 
+                console.log("LOGIN RES:", res);
+                
                 this.user = res.data || null;
                 this.token = res.token || null;
 

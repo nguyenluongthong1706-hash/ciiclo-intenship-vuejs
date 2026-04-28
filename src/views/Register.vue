@@ -56,11 +56,11 @@ const handleRegister = async ()=>{
             <p v-if="errors.password" class="error">
                 {{errors.password[0]}}
             </p>
-            <input class="input-login" v-model="password" placeholder="Enter your password">
+            <input type="password" class="input-login" v-model="password" placeholder="Enter your password">
             <p v-if="errors.password_confirmation" class="error">
                 {{errors.password_confirmation[0]}}
             </p>
-            <input class="input-login" v-model="password_confirmation" placeholder="Enter your password confirmation">
+            <input type="password" class="input-login" v-model="password_confirmation" placeholder="Enter your password confirmation">
             <div :style="{textAlign:'center'}">
                 <button type="submit" class="btn-login">Sign up </button>
             </div>
